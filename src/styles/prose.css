@@ -1,0 +1,105 @@
+h1,
+h2,
+h3 {
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 2rem 0 0.5rem;
+}
+h1 {
+  font-size: 1.953em;
+  margin-top: 0;
+}
+h2 {
+  font-size: 1.563em;
+  border-top: 1px solid var(--border);
+  padding-top: 1.5rem;
+  margin-top: 3rem;
+}
+.prose > h2:first-child {
+  border-top: 0;
+  padding-top: 0;
+  margin-top: 1.5rem;
+}
+h3 {
+  font-size: 1.25em;
+}
+p,
+ul,
+ol,
+blockquote,
+pre,
+figure {
+  margin: 0 0 1.5em;
+}
+ul,
+ol {
+  padding-left: 1.5rem;
+}
+li {
+  margin-block: 0.25rem;
+}
+blockquote {
+  border-left: 2px solid var(--border-strong);
+  padding-left: 1rem;
+  margin-inline: 0;
+}
+blockquote > :last-child {
+  margin-bottom: 0;
+}
+hr {
+  border: 0;
+  border-top: 1px solid var(--border);
+  margin: 3rem 0;
+}
+.post-header {
+  margin-bottom: 2rem;
+}
+.post-header h1 {
+  margin-bottom: 0.5rem;
+}
+.post-header p {
+  margin: 0;
+}
+sup a {
+  text-decoration: none;
+}
+section[data-footnotes] {
+  border-top: 1px solid var(--border);
+  margin-top: 3rem;
+  padding-top: 1rem;
+  font-size: 0.875em;
+  color: var(--muted);
+}
+section[data-footnotes] ol {
+  padding-left: 1.25rem;
+}
+section[data-footnotes] p {
+  margin: 0;
+}
+img {
+  max-width: 100%;
+  height: auto;
+}
+.prose p > img,
+.prose figure img {
+  display: block;
+}
+.prose picture {
+  display: block;
+  margin: 0 0 1.5em;
+  text-align: center;
+}
+.prose picture img {
+  margin-inline: auto;
+}
+@media (prefers-color-scheme: dark) {
+  .prose :not(picture) > img {
+    filter: brightness(0.9) contrast(1.05);
+    border: 1px solid var(--border);
+  }
+}
+figcaption {
+  font: 0.875rem var(--sans);
+  color: var(--muted);
+  margin-top: 0.5rem;
+}

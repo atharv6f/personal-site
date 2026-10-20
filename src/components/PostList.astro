@@ -1,0 +1,22 @@
+---
+import { isoDate, type Post } from "../lib";
+import { smartQuotes } from "../quotes";
+interface Props {
+  posts: Post[];
+}
+const { posts } = Astro.props;
+---
+
+<ul class="post-list">
+  {
+    posts.map((p) => (
+      <li>
+        <time datetime={isoDate(p.data.date)}>{isoDate(p.data.date)}</time>
+        <span>
+          <a href={`/posts/${p.id}/`}>{smartQuotes(p.data.title)}</a>
+          {p.data.draft && <span class="draft-tag">{" draft"}</span>}
+        </span>
+      </li>
+    ))
+  }
+</ul>

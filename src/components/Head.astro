@@ -1,0 +1,103 @@
+---
+import { site, isTodo } from "../site.config";
+import { smartQuotes } from "../quotes";
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string; // absolute URL of the person photo (jsonLd="person")
+  path: string; // e.g. "/posts/foo/"
+  type?: "website" | "article";
+  published?: Date;
+  modified?: Date;
+  ogImage?: string; // path, e.g. "/og/foo.png"
+  jsonLd?: "person" | "post";
+  draft?: boolean;
+}
+
+const {
+  title: rawTitle,
+  description: rawDescription,
+  image: personImage,
+  path,
+  type = "website",
+  published,
+  modified,
+  ogImage = "/og/default.png",
+  jsonLd,
+} = Astro.props;
+
+const title = smartQuotes(rawTitle);
+const description = smartQuotes(rawDescription);
+const abs = (p: string) => new URL(p, site.url).href;
+const canonical = abs(path);
+const image = abs(ogImage);
+const fullTitle = path === "/" ? site.name : `${title} | ${site.name}`;
+const imageAlt = path === "/" ? `${site.name}. ${site.bio}` : `${title}, by ${site.name}`;
+
+const sameAs = [site.github, site.x, site.linkedin].filter((u) => !isTodo(u));
+const person = {
+  "@type": "Person",
+  name: site.name,
+  jobTitle: "AI Engineer",
+  url: site.url + "/",
+  email: site.email,
+  ...(personImage ? { image: personImage } : {}),
+  sameAs,
+};
+const ld =
+  jsonLd === "person"
+    ? { "@context": "https://schema.org", ...person }
+    : jsonLd === "post"
+      ? {
+          "@context": "https://schema.org",
+          "@type": "BlogPosting",
+          headline: title,
+          description,
+          url: canonical,
+          mainEntityOfPage: canonical,
+          image,
+          datePublished: published?.toISOString(),
+          dateModified: (modified ?? published)?.toISOString(),
+          author: person,
+        }
+      : null;
+---
+
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>{fullTitle}</title>
+<meta name="description" content={description} />
+<link rel="canonical" href={canonical} />
+<meta property="og:type" content={type} />
+<meta property="og:site_name" content={site.name} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={image} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta property="og:image:alt" content={imageAlt} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={image} />
+<meta name="twitter:image:alt" content={imageAlt} />
+{published && <meta property="article:published_time" content={published.toISOString()} />}
+{(modified ?? published) && type === "article" && (
+  <meta property="article:modified_time" content={(modified ?? published)!.toISOString()} />
+)}
+<meta name="color-scheme" content="light dark" />
+<meta name="theme-color" content="#fbfaf7" media="(prefers-color-scheme: light)" />
+<meta name="theme-color" content="#141413" media="(prefers-color-scheme: dark)" />
+<link rel="alternate" type="application/rss+xml" title={site.name} href="/rss.xml" />
+<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+<link
+  rel="preload"
+  href="/fonts/source-serif-4-latin-wght-normal.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin
+/>
+{ld && <script type="application/ld+json" set:html={JSON.stringify(ld).replace(/</g, "\\u003c")} />}

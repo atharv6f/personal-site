@@ -1,0 +1,3 @@
+these days i'm deep in agent reliability.. agents write code and answer tickets now, and it's weirdly hard to tell if done really means done, which agent did it, who let it, or what it cost.
+
+building or running agents yourself? email me what's breaking.. happy to compare notes. and if you invest early, or you're interested in building together.. click the say hi button.

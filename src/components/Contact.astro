@@ -1,0 +1,11 @@
+---
+import { site, isTodo } from "../site.config";
+const booking = isTodo(site.booking) ? null : site.booking;
+if (booking && !booking.startsWith("https://")) throw new Error("site.booking must start with https://");
+---
+
+{booking && (
+  <p class="contact">
+    <a class="button" href={booking}>say hi</a>
+  </p>
+)}

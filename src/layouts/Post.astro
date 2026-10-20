@@ -1,0 +1,52 @@
+---
+import Base from "./Base.astro";
+import Contact from "../components/Contact.astro";
+import Social from "../components/Social.astro";
+import { site } from "../site.config";
+import { isoDate, longDate, type Post } from "../lib";
+import { smartQuotes } from "../quotes";
+
+interface Props {
+  post: Post;
+}
+const { post } = Astro.props;
+const { title, description, date, updated, draft } = post.data;
+---
+
+<Base
+  title={title}
+  description={description}
+  path={`/posts/${post.id}/`}
+  type="article"
+  published={date}
+  modified={updated}
+  ogImage={`/og/${post.id}.png`}
+  jsonLd="post"
+>
+  <article>
+    <header class="post-header">
+      <h1>{smartQuotes(title)}</h1>
+      <p class="meta">
+        <time datetime={isoDate(date)}>{longDate(date)}</time>
+        {
+          updated && (
+            <>
+              {" · Updated "}<time datetime={isoDate(updated)}>{longDate(updated)}</time>
+            </>
+          )
+        }
+        {draft && <span class="draft-tag">{" · draft"}</span>}
+      </p>
+    </header>
+    <div class="prose">
+      <slot />
+    </div>
+    <div class="post-end">
+      <p class="meta"><a href="/">{site.name}</a> · {site.bio}</p>
+      <div class="post-end-row">
+        <Social />
+        <Contact />
+      </div>
+    </div>
+  </article>
+</Base>

@@ -1,0 +1,39 @@
+---
+import { Image, getImage } from "astro:assets";
+import Base from "../layouts/Base.astro";
+import Social from "../components/Social.astro";
+import Contact from "../components/Contact.astro";
+import PostList from "../components/PostList.astro";
+import { site } from "../site.config";
+import { getPosts } from "../lib";
+import { homeParagraphs } from "../home-text";
+import raw from "../content/home.txt?raw";
+import photo from "../assets/images/atharv.jpg";
+
+const paragraphs = homeParagraphs(raw);
+const posts = await getPosts();
+const optimised = await getImage({ src: photo, width: 320, height: 320, fit: "cover", position: "center", format: "jpg", quality: 88 });
+const photoUrl = new URL(optimised.src, site.url).href;
+---
+
+<Base title={site.name} description={site.bio} path="/" jsonLd="person" image={photoUrl}>
+  <div class="who">
+    <Image class="photo" src={photo} alt="" width={72} height={72} densities={[1, 2]} fit="cover" format="jpg" quality={88} loading="eager" />
+    <div class="who-text">
+      <h1>{site.name}</h1>
+      <p class="meta">{site.bio}</p>
+      <Social />
+    </div>
+  </div>
+  <div class="prose">
+    {paragraphs.map((lines) => <p>{lines.map((line, i) => <>{i > 0 && <br />}{line}</>)}</p>)}
+  </div>
+  <Contact />
+  {
+    posts.length > 0 ? (
+      <section class="writing"><h2>Writing</h2><PostList posts={posts} /></section>
+    ) : (
+      <p class="meta soon">posts soon.. probably</p>
+    )
+  }
+</Base>

@@ -1,0 +1,10 @@
+node_modules/
+dist/
+.astro/
+.wrangler/
+.obsidian/
+.env
+.env.*
+.DS_Store
+*.log
+banned-terms.txt
